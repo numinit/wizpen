@@ -1,0 +1,37 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% File: wizpen.tex
+% Date: November 20, 2018
+% Authors: Morgan Jones and Oliver Corff
+%
+% (C) 2008 Oliver Corff
+% (C) 2018 Morgan Jones
+%
+% Licensed under the LaTeX Project Public License
+%
+% Wizpen, a Pigpen-inspired metafont for wizard spellbooks in D&D
+% Based on the Pigpen metafont: https://ctan.org/pkg/pigpen
+%
+% Usage: \input wizpen
+%
+% No options.
+%
+% NB: This package requires LaTeX2e!
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ifx\LaTeXwizpen\undefined
+	\font\mywizpenfont wizpen
+	%
+	\def\wizpenfont{\let\wizpenfont\mywizpenfont}
+\fi
+
+\ifx\TeXwizpen\undefined
+	\def\TeXwizpen{}
+	\catcode`@ 11
+\else
+	\endinput
+\fi
+%
+\ifx\LaTeXwizpen\undefined
+	\catcode`@ 12
+\fi

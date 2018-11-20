@@ -1,0 +1,9 @@
+*.swo
+*.swp
+
+*.aux
+*.log
+*.pdf
+
+/texmf/fonts/pk
+/texmf/fonts/tfm
