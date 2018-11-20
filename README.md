@@ -3,6 +3,9 @@
 A Pigpen-inspired font for D\&D wizard spellbooks. Unlike Pigpen, characters
 can share vertical strokes while still being readable.
 
+Based on the LaTeX [pigpen font](https://ctan.org/pkg/pigpen), originally
+(C) 2008 Oliver Corff.
+
 ![key](img/key.png)
 
 ## Build prereqs
@@ -49,3 +52,8 @@ An example document will look like this:
 `script/wizpen.rb` is how the font gets generated (check the makefile).
 If you want to modify it, edit that file, and the font will be regenerated
 at the next `make`.
+
+## License
+
+Licensed under the [LaTeX Project Public License](https://ctan.org/license/lppl):
+See [LICENSE](LICENSE)
