@@ -3,6 +3,8 @@
 A Pigpen-inspired font for D\&D wizard spellbooks. Unlike Pigpen, characters
 can share vertical strokes while still being readable.
 
+![key](img/key.png)
+
 ## Build prereqs
 
 * metafont
