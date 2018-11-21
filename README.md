@@ -1,7 +1,8 @@
 # wizpen
 
-A Pigpen-inspired font for D\&D wizard spellbooks. Unlike Pigpen, characters
-can share vertical strokes while still being readable.
+A [Pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher)-inspired font,
+originally created for a D\&D wizard spellbook. Unlike Pigpen, characters in
+this font can share vertical strokes while still being readable.
 
 >Copying a spell into your spellbook involves reproducing the basic form of
 >the spell, then deciphering the unique system of notation used by the wizard
