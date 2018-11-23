@@ -8,16 +8,16 @@
 
 mode_setup;
     if unknown mag: mag := 1; fi;
-    mg:=1;
-    width#:=mg*12pt#;
-    height#:=mg*12pt#;
-    depth#:=mg*0pt#;
+    mg := 1;
+    width# := mg*12pt#;
+    height# := mg*12pt#;
+    depth# := mg*0pt#;
 
-    thick#:=mg*1.5pt#;
-    thin#:=mg*1.00pt#;
+    thick# := mg*1.5pt#;
+    thin# := mg*1.00pt#;
 
-    define_pixels(height,depth,width);
-    define_blacker_pixels(thin,thick);
+    define_pixels(height, depth, width);
+    define_blacker_pixels(thin, thick);
 
     north := 12/12height;
     south := 0/12height;
@@ -27,10 +27,10 @@ mode_setup;
     vm := 6/12height;
 
     font_size 12pt#;
-    font_normal_space 3/8width#;
-    font_x_height height#;
+    font_normal_space width#;
+    font_x_height 0;
     font_quad width#;
-    font_extra_space 3/8width#;
+    font_extra_space width#;
 
 def roundpen =
     pickup pencircle scaled 0.9 thin
