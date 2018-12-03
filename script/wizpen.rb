@@ -43,6 +43,19 @@ GRID_B = {
   Z: 3...1
 }
 
+GRID_C = {
+  :'0' => 3...1,
+  :'1' => 1..2,
+  :'2' => 1..3,
+  :'3' => 2..3,
+  :'4' => 0..2,
+  :'5' => 0..3,
+  :'6' => 2..0,
+  :'7' => 0..1,
+  :'8' => 3..1,
+  :'9' => 3..0,
+}
+
 CORNERS = {
   0 => %i[west north],
   1 => %i[east north],
@@ -52,9 +65,9 @@ CORNERS = {
 
 TRIANGLES_A = {
   0 => [%i[west vm], %i[west north], %i[hm north], %i[west vm]],
-  1 => [%i[east vm], %i[east north], %i[hm north], %i[east vm]],
-  2 => [%i[east vm], %i[east south], %i[hm south], %i[east vm]],
-  3 => [%i[west vm], %i[west south], %i[hm south], %i[west vm]]
+  1 => [%i[hm north], %i[east vm], %i[east north], %i[hm north]],
+  2 => [%i[east vm], %i[hm south], %i[east south], %i[east vm]],
+  3 => [%i[hm south], %i[west vm], %i[west south], %i[hm south]]
 }
 
 TRIANGLES_B_MAP = {
@@ -77,11 +90,13 @@ TEX_CORNERS = {
 }
 
 def range_to_corners range, grid
-  ret = []
+  vertices = []
   triangles = []
   diagonals = []
+  negative = []
 
   idx = range.begin % 4
+  start = idx
   finish = (range.end + 1) % 4
 
   close = false
@@ -92,22 +107,58 @@ def range_to_corners range, grid
   end
 
   while idx != finish
-    ret << CORNERS[idx]
+    vertex = CORNERS[idx]
+    vertices << vertex
+
+    negative << vertex if idx == start && !close
+
     idx = (idx + 1) % 4
-    triangles << TRIANGLES_A[idx] if close || idx != finish
+
+    negative << CORNERS[idx] if idx == finish && !close
+
+    if close || idx != finish
+      triangle = TRIANGLES_A[idx]
+      triangles << triangle
+      triangle.each do |point|
+        if (point.include?(:vm) or point.include?(:hm)) and !negative.include?(point)
+          negative << point
+        end
+      end
+    end
   end
 
-  ret << CORNERS[idx]
+  vertices << CORNERS[idx]
 
   if close
     idx = (idx + 1) % 4
-    ret << CORNERS[idx]
-    triangles << TRIANGLES_A[idx]
+    vertices << CORNERS[idx]
+    triangle = TRIANGLES_A[idx]
+    triangles << triangle
+    triangle.each do |point|
+      if point.include?(:vm) or point.include?(:hm) and point == negative.first
+        negative << point
+      end
+    end
   end
 
   diagonals << TRIANGLES_B_MAP[TRIANGLES_B[range.begin..range.end]]
 
-  {vertices: ret, triangles: triangles, diagonals: diagonals}
+  CORNERS.each do |key, point|
+    if !negative.include? point and !triangles.any? {|t| t.include? point}
+      negative << point
+    end
+  end
+
+  if negative.first != negative.last
+    negative << negative.first
+  end
+
+  {
+    vertices: vertices,
+    negative: negative,
+    triangles: triangles,
+    diagonals: diagonals
+  }
 end
 
 def get_letter_spec letter
@@ -115,11 +166,16 @@ def get_letter_spec letter
   range = GRID_A[letter]
   grid = :A
   if range.nil?
-    range = GRID_B.fetch(letter)
+    range = GRID_B[letter]
     grid = :B
   end
 
-  raise ArgumentError, "unknown letter: #{letter}" unless range
+  if range.nil?
+    range = GRID_C[letter]
+    grid = :C
+  end
+
+  return nil if range.nil?
 
   {
     letter: letter,
@@ -154,14 +210,24 @@ def draw_corners corners
   {variables: variables, order: order, bbox: bbox, cycle: cycle}
 end
 
+version = ARGV[0] || '0.0.0'
+
 puts <<PREAMBLE
 % Wizpen, a Pigpen-inspired metafont for wizard spellbooks in D&D
 % Based on the Pigpen metafont: https://ctan.org/pkg/pigpen
 %
+% https://github.com/numinit/wizpen
+%
+% Version #{version}
+%
 % (C) 2008 Oliver Corff
 % (C) 2018 Morgan Jones
 %
-% Licensed under the LaTeX Project Public License
+% Licensed under the LaTeX Project Public License.
+%
+% Special greets to Battlemage Brewery, host to the best D&D campaign in socal.
+% Blood of the people!
+%
 
 mode_setup;
     if unknown mag: mag := 1; fi;
@@ -217,61 +283,67 @@ def dotted =
 enddef;
 PREAMBLE
 
-('A'..'Z').each do |x|
-  [x.upcase, x.downcase].each do |letter|
-    puts 'beginchar("%s", width#, height#, depth#);' % letter
-    spec = get_letter_spec(letter)
-    corner_spec = spec[:corners]
-    corners = draw_corners(corner_spec[:vertices])
+(('A'..'Z').to_a + ('a'..'z').to_a + ('0'..'9').to_a).each do |letter|
+  spec = get_letter_spec(letter)
+  next unless spec
 
-    vars = corners[:variables]
-    order = corners[:order]
-    bbox = corners[:bbox]
-    cycle = corners[:cycle]
+  puts 'beginchar("%s", width#, height#, depth#);' % letter
+  corner_spec = spec[:corners]
+  corners = draw_corners(corner_spec[:vertices])
 
-    bbox.each do |corner, var|
-      puts "    #{corner.join(' ')} #{var}=(#{vars[var].join(', ')});"
-    end
+  vars = corners[:variables]
+  order = corners[:order]
+  bbox = corners[:bbox]
+  cycle = corners[:cycle]
 
-    puts '    roundpen;'
-    puts "    draw #{(cycle ? order + [:cycle] : order).join('--')};"
-
-    template = if spec[:fill]
-                 "draw %1$s;\n    fill %1$s;"
-               else
-                 'draw %s;'
-               end
-
-    corner_spec[:triangles].each do |tri|
-      if spec[:grid] != :B || !tri.any? {|t| [%i[west north], %i[east south]].include?(t)}
-        tri_corners = draw_corners(tri)
-        command = tri_corners[:order].map {|var|
-          '(%s)' % tri_corners[:variables][var].join(', ')
-        }
-        command << 'cycle' if tri_corners[:cycle]
-        puts "    #{template % command.join('--')}"
-      end
-    end
-
-    if spec[:grid] == :B
-      corner_spec[:diagonals].each do |tri|
-        tri_corners = draw_corners(tri)
-        command = tri_corners[:order].map {|var|
-          '(%s)' % tri_corners[:variables][var].join(', ')
-        }
-        command << 'cycle' if tri_corners[:cycle]
-        puts "    draw #{command.join('--')};"
-      end
-    end
-
-    if spec[:grid] == :A
-      if letter =~ /[A-Z]/
-        puts '    double_dotted;'
-      else
-        puts '    dotted;'
-      end
-    end
-    puts 'endchar;'
+  bbox.each do |corner, var|
+    puts "    #{corner.join(' ')} #{var}=(#{vars[var].join(', ')});"
   end
+
+  puts '    roundpen;'
+  puts "    draw #{(cycle ? order + [:cycle] : order).join('--')};"
+
+  template = if spec[:fill]
+               "draw %1$s;\n    fill %1$s;"
+             else
+               'draw %s;'
+             end
+
+  corner_spec[:triangles].each do |tri|
+    if spec[:grid] != :B || !tri.any? {|t| [%i[west north], %i[east south]].include?(t)}
+      tri_corners = draw_corners(tri)
+      command = tri_corners[:order].map {|var|
+        '(%s)' % tri_corners[:variables][var].join(', ')
+      }
+      command << 'cycle' if tri_corners[:cycle]
+      puts "    #{template % command.join('--')}"
+    end
+  end
+
+  if spec[:grid] == :A
+    if letter =~ /[A-Z]/
+      puts '    double_dotted;'
+    else
+      puts '    dotted;'
+    end
+  elsif spec[:grid] == :B
+    corner_spec[:diagonals].each do |tri|
+      tri_corners = draw_corners(tri)
+      command = tri_corners[:order].map {|var|
+        '(%s)' % tri_corners[:variables][var].join(', ')
+      }
+      command << 'cycle' if tri_corners[:cycle]
+      puts "    draw #{command.join('--')};"
+    end
+  elsif spec[:grid] == :C
+    neg_corners = draw_corners(corner_spec[:negative])
+    command = neg_corners[:order].map {|var|
+      '(%s)' % neg_corners[:variables][var].join(', ')
+    }
+    command << 'cycle' if neg_corners[:cycle]
+    template = "draw %1$s;\n    fill %1$s;"
+    puts "    #{template % command.join('--')}"
+  end
+  puts 'endchar;'
 end
 puts 'end.'

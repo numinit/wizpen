@@ -1,67 +1,250 @@
 %TeX
 
-\documentclass[letterpaper]{article}
+\documentclass{amsbook}
 
 \usepackage[top=0.125in,bottom=0.125in,left=0.125in,right=0.125in]{geometry}
 \usepackage[letterspace=150]{microtype}
+\usepackage[utf8]{inputenc}
 \usepackage{setspace}
+\usepackage{pgfkeys}
+\usepackage{ifthen}
+
+\usepackage[none]{hyphenat}
 
 \usepackage{wizpen}
 
+\makeatletter
+\newcommand*{\rom}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\makeatother
+
+\geometry{
+    paperheight=8.5in,
+    paperwidth=5.5in,
+    heightrounded,
+}
+
+\setlength\parindent{0pt}
+
+\pgfkeys{
+    /Spell/.is family, /Spell,
+    level/.estore in = \SpellLevel,
+    school/.estore in = \SpellSchool,
+    time/.estore in = \SpellTime,
+    range/.estore in = \SpellRange,
+    components/.estore in = \SpellComponents,
+    duration/.estore in = \SpellDuration,
+    type/.estore in = \SpellType,
+    type/.initial = s,
+}
+
+\def\+{\discretionary{}{}{}}
+
+\newcommand{\D}[2]{#1d#2}
+
+\newcommand{\Spell}[3][] {%
+    \pgfkeys{/Spell, #1}%
+    %{\Huge \rom{\SpellLevel} \enspace}%
+    {%
+        \huge \renewcommand{\baselinestretch}{1.5}
+        {\wizpenfont #2} \hfill
+            {\wizpenfont \SpellComponents}
+            {\Huge \raisebox{3pt}{/ \rom{\SpellLevel}}} \\ \\
+        {\wizpenfont \SpellTime} \hfill
+            {\wizpenfont \SpellDuration} \\ \\
+        {\wizpenfont \SpellSchool} \hfill
+            {\wizpenfont \SpellRange} \\
+    }
+    {
+        \LARGE \renewcommand{\baselinestretch}{1}%
+        {\wizpenfont \begin{sloppypar} #3 \end{sloppypar}}
+    }
+    \clearpage
+}
+
 \begin{document}
 
-\section*{Expanded}
-
 {
-    \Large \wizpenfont \noindent \lsstyle
-    ABCDEFGHI \enspace JKLMNOPQR \enspace STUV \enspace WXYZ \\ \\
-}
-{
-    \Large \noindent
-    \textls[470] {ABCDEFGHI \enspace JKLMNOPQR \enspace STUV \enspace WXYZ} \\ \\
-}
+    \Spell[%
+        level=1, school=evocation, time=action, range=self,
+        components=vs, duration=instant
+    ]{Burning Hands}{
+        As you hold your hands with thumbs touching and fingers spread, a thin 
+        sheet of flames shoots forth from your outstretched fingertips. Each 
+        creature in a 15-foot cone must make a Dexterity saving throw. A 
+        creature takes \D{3}{6} fire damage on a failed save, or half as much damage 
+        on a successful one. The fire ignites any flammable objects in the area 
+        that aren't being worn or carried. \\
 
-\section*{Compact}
+        At Higher Levels. When you cast this spell using a spell slot of 2nd 
+        level or higher, the damage increases by \D{1}{6} for each slot level above 
+        1st.
+    }
+    \Spell[%
+        level=1, school=enchantment, time=action, range=30,
+        components=vs, duration=1 hour
+    ]{Charm Person}{
+        You attempt to charm a humanoid you can see within range. It must make a 
+        Wisdom saving throw, and does so with advantage if you or your 
+        companions are fighting it. If it fails the saving throw, it is charmed 
+        by you until the spell ends or until you or your companions do anything 
+        harmful to it. The charmed creature regards you as a friendly 
+        acquaintance. When the spell ends, the creature knows it was charmed by 
+        you. \\
 
-{
-    \Large \wizpenfont \noindent
-    ABCDEFGHI \enspace JKLMNOPQR \enspace STUV \enspace WXYZ \\ \\
-}
-{
-    \Large \noindent
-    \textls[320] {ABCDEFGHI \enspace JKLMNOPQR \enspace STUV \enspace WXYZ} \\ \\
-}
+        When you cast this spell using a spell slot of 2nd 
+        level or higher, you can target one additional creature for each slot 
+        level above 1st. The creatures must be within 30 feet of each other when 
+        you target them.
+    }
+    \Spell[%
+        level=1, school=abjuration, time=action, range=touch,
+        components=vsm, duration=8 hours
+    ]{Mage Armor}{
+        You touch a willing creature who isn't wearing armor, and a protective 
+        magical force surrounds it until the spell ends. The target's base AC 
+        becomes 13 + its Dexterity modifier. The spell ends if the target dons 
+        armor or if you dismiss the spell as an action.
+    }
+    \Spell[%
+        level=1, school=evocation, time=action, range=120,
+        components=vs, duration=instant
+    ]{Magic Missile}{
+        You create three glowing darts of magical force. Each dart hits a 
+        creature of your choice that you can see within range. A dart deals 1d4 
+        + 1 force damage to its target. The darts all strike simultaneously, and 
+        you can direct them to hit one creature or several. \\
 
-\section*{Examples}
+        At Higher Levels. When you cast this spell using a spell slot of 2nd 
+        level or higher, the spell creates one more dart for each slot level 
+        above 1st.
+    }
+    \Spell[%
+        level=1, school=abjuration, time=reaction, range=self,
+        components=vs, duration=1 round
+    ]{Shield}{
+        An invisible barrier of magical force appears and protects you. Until 
+        the start of your next turn, you have a +5 bonus to AC, including 
+        against the triggering attack, and you take no damage from magic 
+        missile. \\
 
-{
-    \Large \wizpenfont \noindent %\lsstyle
-    Burning \enspace Hands \\ \\
-    Detect \enspace Magic \\ \\
-    Illusory \enspace Script \\ \\
-    Mage \enspace Armor \\ \\
-    Magic \enspace Missile \\ \\
-    Magic \enspace Weapon \\ \\
-    Mirror \enspace Image \\ \\
-    Shatter \\ \\
-    Shield \\ \\
-    Suggestion \\
-}
+        Reaction notes: which you take when you are hit by an attack or targeted 
+        by the magic missile spell
+    }
+    \Spell[%
+        level=1, school=conjuration, time=1 hour, range=10,
+        components=vsm, duration=instant, type=r
+    ]{Find Familiar}{
+        \small
+        You gain the service of a familiar, a spirit that takes an animal form 
+        you choose: bat, cat, crab, frog (toad), hawk, lizard, octopus, owl, 
+        poisonous snake, fish (quipper), rat, raven, sea horse, spider, or 
+        weasel. Appearing in an unoccupied space within range, the familiar has 
+        the statistics of the chosen form, though it is a celestial, fey, or 
+        fiend (your choice) instead of a beast. \\
 
-\section*{Prose}
+        Your familiar acts independently of you, but it always obeys your 
+        commands. In combat, it rolls its own initiative and acts on its own 
+        turn. A familiar can't attack, but it can take other actions as normal. 
+        When the familiar drops to 0 hit points, it disappears, leaving behind 
+        no physical form. It reappears after you cast this spell again While 
+        your familiar is within 100 feet of you, you can communicate with it 
+        telepathically. Additionally, as an action, you can see through your 
+        familiar's eyes and hear what it hears until the start of your next 
+        turn, gaining the benefits of any special senses that the familiar has. 
+        During this time, you are deaf and blind with regard to your own senses. 
+        As an action, you can temporarily dismiss your familiar. It disappears 
+        into a pocket dimension where it awaits your summons. Alternatively, you 
+        can dismiss it forever. As an action while it is temporarily dismissed, 
+        you can cause it to reappear in any unoccupied space within 30 feet of 
+        you. You can't have more than one familiar at a time. If you cast this 
+        spell while you already have a familiar, you instead cause it to adopt a 
+        new form. Choose one of the forms from the above list. Your familiar 
+        transforms into the chosen creature. \\
 
-% TODO: figure out how characters can share horizontal strokes. Because
-% they should be able to.
-{
-    \Large \wizpenfont \noindent %
-    INTELLIGENCEISYOURSPELLCASTINGABILITY \\
-    FORYOURWIZARDSPELLSSINCEYOULEARNYOURS \\
-    PELLSTHROUGHDEDICATEDSTUDYANDMEMORIZATION \\
-    YOUUSEYOURINTELLIGENCEWHENEVERASPELLREFERS \\
-    TOYOURSPELLCASTINGABILITYINADDITIONYOUUSE \\
-    YOURINTELLIGENCEMODIFIERWHENSETTINGTHE \\
-    SAVINGTHROWDCFORAWIZARDSPELLYOUCASTANDWHEN \\
-    MAKINGANATTACKROLLWITHONE \\
+        %Finally, when you cast a spell with a range of touch, your familiar can 
+        %deliver the spell as if it had cast the spell. Your familiar must be 
+        %within 100 feet of you, and it must use its reaction to deliver the 
+        %spell when you cast it. If the spell requires an attack roll, you use 
+        %your attack modifier for the roll.
+    }
+    \Spell[%
+        level=1, school=illusion, time=automatic, range=touch,
+        components=sm, duration=10 days, type=r
+    ]{Illusory Script}{
+        \large
+        You write on parchment, paper, or some other suitable writing material 
+        and imbue it with a potent illusion that lasts for the duration. To you 
+        and any creatures you designate when you cast the spell, the writing 
+        appears normal, written in your hand, and conveys whatever meaning you 
+        intended when you wrote the text. To all others, the writing appears as 
+        if it were written in an unknown or magical script that is 
+        unintelligible. Alternatively, you can cause the writing to appear to be 
+        an entirely different message, written in a different hand and language, 
+        though the language must be one you know. \\
+
+        Should the spell be dispelled, the original script and the illusion both 
+        disappear. A creature with truesight can read the hidden message.
+    }
+    \Spell[%
+        level=2, school=conjuration, time=bonus, range=self,
+        components=v, duration=instant
+    ]{Misty Step}{
+        Briefly surrounded by silvery mist, you teleport up to 30 feet to an 
+        unoccupied space that you can see.
+    }
+    \Spell[%
+        level=2, school=necromancy, time=action, range=60,
+        components=vs, duration=1 minute, type=c
+    ]{Enfeebling Ray}{
+        A black beam of enervating energy springs from your finger toward a 
+        creature within range. Make a ranged spell attack against the target. On 
+        a hit, the target deals only half damage with weapon attacks that use 
+        Strength until the spell ends. \\
+
+        At the end of each of the target's turns, it can make a Constitution 
+        saving throw against the spell. On a success, the spell ends.
+    }
+    \Spell[%
+        level=2, school=illusion, time=action, range=touch,
+        components=vsm, duration=1 hour, type=c
+    ]{Invisibility}{
+        A creature you touch becomes invisible until the spell ends. Anything 
+        the target is wearing or carrying is invisible as long as it is on the 
+        target's person. The spell ends for a target that attacks or casts a 
+        spell. \\
+
+        At Higher Levels. When you cast this spell using a spell slot of 3rd 
+        level or higher, you can target one additional creature for each slot 
+        level above 2nd.
+    }
+    \Spell[%
+        level=2, school=conjuration, time=bonus, range=touch,
+        components=vsm, duration=1 minute, type=c
+    ]{Dragon's Breath}{
+        Touch a willing creature. Choose acid, cold, fire, lightning, or poison. 
+        Until the spell ends, the creature can use an action to exhale energy of 
+        the chosen type in a 15 foot cone. Each creature in that area must make 
+        a Dexterity save, taking \D{3}{6} damage on a failed save, or half as much on 
+        a success.
+    }
+    \Spell[%
+        level=2, school=illusion, time=bonus, range=self,
+        components=vs, duration=1 minute, type=c
+    ]{Shadow Blade}{
+        You create a magic sword that lasts until the spell ends. It counts as a 
+        simple melee weapon that you're proficient with. It deals \D{2}{8} psychic 
+        damage, and has the finesse, light, and thrown properties (range 20/60). 
+        When you attack in dim light or darkness, you have advantage. \\
+
+        If you drop the weapon or throw it, it disappears at the end of the 
+        turn. While the spell lasts, you can use a bonus action to make the 
+        sword reappear in your hand. \\
+
+        At Higher Levels: When you cast this spell using a 3rd or 4th level 
+        slot, the damage is \D{3}{8}. At 5th or 6th level, it's \D{4}{8}. At 7th level or 
+        higher, it's \D{5}{8}
+    }
 }
 
 \end{document}
+

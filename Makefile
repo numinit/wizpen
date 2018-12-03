@@ -1,3 +1,5 @@
+VERSION := $(file < VERSION)
+
 SPELLBOOK_TEX := spellbook.tex
 SPELLBOOK_PDF := spellbook.pdf
 
@@ -19,7 +21,7 @@ redo:
 
 $(WIZPEN_MF):
 	mkdir -p $(dir $(WIZPEN_MF))
-	ruby script/wizpen.rb > $(WIZPEN_MF)
+	ruby script/wizpen.rb $(VERSION) > $(WIZPEN_MF)
 
 $(SPELLBOOK_PDF): $(SPELLBOOK_TEX) $(WIZPEN_MF)
 	TEXMFHOME=texmf pdflatex $(SPELLBOOK_TEX)
