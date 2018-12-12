@@ -1,0 +1,85 @@
+%TeX
+
+\documentclass[letterpaper]{article}
+
+\usepackage[top=0.125in,bottom=0.125in,left=0.125in,right=0.125in]{geometry}
+\usepackage[letterspace=150]{microtype}
+\usepackage{setspace}
+\usepackage{blindtext}
+
+\usepackage{wizpen}
+
+\begin{document}
+
+\section*{Expanded}
+
+{
+    \Large \wizpenfont \noindent \lsstyle
+    ABCDEFGHI JKLMNOPQR STUV WXYZ \\ \\
+}
+{
+    \Large \noindent
+    \textls[550] {ABCDEFGHI JKLMNOPQR STUV WXYZ} \\ \\
+}
+
+{
+    \Large \wizpenfont \noindent \lsstyle
+    0123456789 \\ \\
+}
+{
+    \Large \noindent
+    \textls[700] {0123456789} \\ \\
+}
+
+\section*{Compact}
+
+{
+    \Large \wizpenfont \noindent
+    ABCDEFGHI JKLMNOPQR STUV WXYZ \\ \\
+}
+{
+    \Large \noindent
+    \textls[380] {ABCDEFGHI JKLMNOPQR STUV WXYZ} \\ \\
+}
+
+{
+    \Large \wizpenfont \noindent
+    0123456789 \\ \\
+}
+{
+    \Large \noindent
+    \textls[550] {0123456789} \\ \\
+}
+
+\clearpage
+
+\section*{Examples}
+
+{
+    \Large \wizpenfont \noindent %\lsstyle
+    Burning Hands \\ \\
+    Detect Magic \\ \\
+    Illusory Script \\ \\
+    Mage Armor \\ \\
+    Magic Missile \\ \\
+    Magic Weapon \\ \\
+    Mirror Image \\ \\
+    Shatter \\ \\
+    Shield \\ \\
+    Suggestion \\
+}
+
+\clearpage
+
+\section*{Prose}
+
+% TODO: figure out how characters can share horizontal strokes. Because
+% they should be able to.
+{
+    \Large \wizpenfont \noindent %
+    \begin{sloppypar}
+        \blindtext
+    \end{sloppypar}
+}
+
+\end{document}

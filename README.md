@@ -9,7 +9,7 @@ this font can share vertical and horizontal strokes while still being readable.
 >who wrote it (5E PHB, p. 114)
 
 Based on the LaTeX [pigpen font](https://ctan.org/pkg/pigpen), originally
-(C) 2008 Oliver Corff. This is version 1.0.1.
+(C) 2008 Oliver Corff. This is version 1.1.0.
 
 You can use a package like `microtype` to add spacing between characters.
 Both "expanded" and "compact" examples are shown below. Regardless of which
