@@ -10,13 +10,17 @@ WIZPEN_MF := texmf/fonts/source/wizpen/wizpen.mf
 
 all: $(EXAMPLE_PDF)
 
-SPELLBOOK: $(SPELLBOOK_PDF)
+spellbook: $(SPELLBOOK_PDF)
 
 clean:
 	rm -f $(WIZPEN_MF)
 	find texmf -type d -perm /1000 -exec rm -rf {} \; || true
 	rm -f *.aux *.log
 	rm -f *.pdf
+
+spellbook-redo:
+	$(MAKE) clean
+	$(MAKE) spellbook
 
 redo:
 	$(MAKE) clean
@@ -29,7 +33,7 @@ $(WIZPEN_MF):
 	ruby script/wizpen.rb $(VERSION) > $(WIZPEN_MF)
 
 $(EXAMPLE_PDF): $(EXAMPLE_TEX) $(WIZPEN_MF)
-	TEXMFHOME=texmf pdflatex $(EXAMPLE_TEX)
+	TEXMFHOME=texmf lualatex $(EXAMPLE_TEX)
 
 $(SPELLBOOK_PDF): $(SPELLBOOK_TEX) $(WIZPEN_MF)
-	TEXMFHOME=texmf pdflatex $(SPELLBOOK_TEX)
+	TEXMFHOME=texmf lualatex $(SPELLBOOK_TEX)
