@@ -29,6 +29,14 @@ rendered with no dots, because they would get in the way of the diagonals.
 If you don't like the dots, just comment out the `dotted` and `double_dotted`
 lines in the generator script (see "Modifying the font" section below).
 
+Also, `1-9` is just the negative space on `A-J`, and `0` is the negative space
+on `Z`.
+
+## Using the provided TTF or OTF
+
+Just [download it](https://github.com/numinit/wizpen/tree/master/fonts)
+and install it. It's that easy.
+
 ## Shoutouts
 
 * DMs and brewers at [Battlemage Brewery](http://battlemagebrewing.com/)
@@ -89,10 +97,6 @@ An example document will look like this:
 
 \end{document}
 ```
-
-## Using the provided TTF or OTF
-
-Just download it from the `fonts` folder and install it. It's that easy.
 
 ## Example
 
