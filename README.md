@@ -3,7 +3,6 @@
 ![The Time of the Dark, (C) 1982 Barbara Hambly. This cover art was great, 
 let me know if I need to replace it.](img/logo.png)
 
-
 A [Pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher)-inspired font,
 originally created for a D\&D wizard spellbook. Unlike Pigpen, characters in
 this font can share vertical and horizontal strokes while still being readable.
@@ -13,7 +12,8 @@ this font can share vertical and horizontal strokes while still being readable.
 >who wrote it (5E PHB, p. 114)
 
 Based on the LaTeX [pigpen font](https://ctan.org/pkg/pigpen), originally
-(C) 2008 Oliver Corff. This is version 1.1.0.
+(C) 2008 Oliver Corff. This is version 1.2.0. Unlike the original, it is
+generated entirely with a Ruby script.
 
 You can use a package like `microtype` to add spacing between characters.
 Both "expanded" and "compact" examples are shown below. Regardless of which
@@ -38,17 +38,32 @@ lines in the generator script (see "Modifying the font" section below).
 
 ## Build prereqs
 
-* metafont
-* pdflatex
-* ruby (if you want to rebuild the font)
+For just building LaTeX documents:
+
+* metafont (for rendering the font in TeX)
+* lualatex (for syntax highlighting important terms in D\&D spells)
+* ruby (for building the metafont definition)
+
+For building the font in TTF and OTF formats:
+
+* mf2pt1
+* fontforge
 
 ## Building
+
+LaTeX files:
 
 * `make`: Build everything
 * `make clean`: Clean everything
 * `make redo`: Run `make clean` and `make all`
+* `make spellbook` or `make spellbook-redo`: Make the provided example
+  spellbook.
 
-## Using the font
+TTF and OTF files:
+
+* `make font`: Build the font into TTF and OTF files. This will take a while.
+
+## Using the LaTeX metafont
 
 Create a `texmf` folder like the one here (or just copy it) and
 `export TEXMFHOME=mytexmf` before running `pdflatex`.
@@ -75,6 +90,10 @@ An example document will look like this:
 \end{document}
 ```
 
+## Using the provided TTF or OTF
+
+Just download it from the `fonts` folder and install it. It's that easy.
+
 ## Example
 
 Check `spellbook.tex` for spoilers on what all these actually say.
@@ -86,6 +105,8 @@ Check `spellbook.tex` for spoilers on what all these actually say.
 `script/wizpen.rb` is how the font gets generated (check the makefile).
 If you want to modify it, edit that file, and the font will be regenerated
 at the next `make`.
+
+That code is pretty messy, but produces the whole font from an algorithm.
 
 ## License
 
