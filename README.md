@@ -1,4 +1,8 @@
-# wizpen
+# 🧙 wizpen
+
+![The Time of the Dark, (C) 1982 Barbara Hambly. This cover art was great, 
+let me know if I need to replace it.](img/logo.png)
+
 
 A [Pigpen cipher](https://en.wikipedia.org/wiki/Pigpen_cipher)-inspired font,
 originally created for a D\&D wizard spellbook. Unlike Pigpen, characters in

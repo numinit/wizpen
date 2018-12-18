@@ -4,6 +4,10 @@
 *.aux
 *.log
 *.pdf
+*.pe
+*.pfb
+*.tfm
+*.*pk*
 
 /texmf/fonts/pk
 /texmf/fonts/tfm

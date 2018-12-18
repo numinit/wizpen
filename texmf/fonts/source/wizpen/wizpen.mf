@@ -3,7 +3,7 @@
 %
 % https://github.com/numinit/wizpen
 %
-% Version 1.1.0
+% Version 0.0.0
 %
 % (C) 2008 Oliver Corff
 % (C) 2018 Morgan Jones

@@ -1,5 +1,13 @@
 local spellbook = {}
 
+spellbook.preamble = function()
+    local ret = {}
+    if os.getenv('DEBUG') then
+        table.insert(ret, '\\renewcommand{\\wizpenfont}{\\normalfont}')
+    end
+    return ret
+end
+
 spellbook.match = function(str, pattern, iftrue, iffalse)
     if string.match(str, pattern) then
         return iftrue
